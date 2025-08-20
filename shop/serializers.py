@@ -23,3 +23,48 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
+        fields = "__all__"
+
+class CartItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)   
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(), source='product', write_only=True
+    )
+
+    class Meta:
+        model = CartItem
+        fields = "__all__"
+
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(source='cartitem_set', many=True, read_only=True)
+
+    class Meta:
+        model = Cart
+        fields = "__all__"
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(), source='product', write_only=True
+    )
+
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(source='orderitem_set', many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+class PaymentSerializer(serializers.ModelSerializer):
+    order = OrderSerializer(read_only=True)
+    order_id = serializers.PrimaryKeyRelatedField(
+        queryset=Order.objects.all(), source='order', write_only=True
+    )
+
+    class Meta:
+        model = Payment
+        fields = "__all__"
