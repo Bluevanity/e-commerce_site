@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from shop.views import RegisterView, UserListView, ProductListView
+from shop.views import RegisterView, UserListView, ProductListCreateView, ProductDetailView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/login/', TokenObtainPairView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/users/', UserListView.as_view(), name='users'), #locked endpoint
-    path('api/products/', ProductListView.as_view(), name='products')
+    path('api/products/', ProductListCreateView.as_view(), name='products'), #locked post endpoint
+    path('api/products/<pk>/', ProductDetailView.as_view(), name='product_detail'),
 ]
 

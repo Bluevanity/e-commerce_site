@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
+from rest_framework import permissions
 from .serializers import RegisterSerializer, ProductSerializer
 from .models import IsAdminUser, Product
 
@@ -13,10 +14,20 @@ class RegisterView(generics.CreateAPIView):
 
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
-    permission_classes = [IsAdminUser]
     serializer_class = RegisterSerializer
+    permission_classes = [IsAdminUser]
 
-class ProductListView(generics.ListAPIView):
+
+
+class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
-    permission_classes = (AllowAny)
+    serializer_class = ProductSerializer
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.IsAdminUser()]
+        return [permissions.AllowAny()]
+    
+
+class ProductDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
