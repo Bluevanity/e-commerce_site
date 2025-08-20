@@ -28,6 +28,11 @@ class ProductListCreateView(generics.ListCreateAPIView):
         return [permissions.AllowAny()]
     
 
-class ProductDetailView(generics.RetrieveDestroyAPIView):
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsAdminUser()]  # only admins can modify
+        return [permissions.AllowAny()]
