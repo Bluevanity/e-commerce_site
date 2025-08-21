@@ -43,3 +43,24 @@ Content-Type: application/json
 {
     "pk": 1
 }
+
+###
+
+POST http://127.0.0.1:8000/api/orders/ HTTP/1,1
+Content-Type: application/json
+
+###
+
+GET http://127.0.0.1:8000/api/cart/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Nzk3NDMxLCJpYXQiOjE3NTU3OTcxMzEsImp0aSI6ImQ4Yjk0NTJkODlkNjQxZTdiODI0NzQyZDRmZWQzZjIxIiwidXNlcl9pZCI6IjIifQ.jB_HgI3tun2uFhAvM5exSA4WIGuJPRHVkGLipuMB1Q0
+
+###
+
+POST http://127.0.0.1:8000/api/cart/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Nzk5ODg0LCJpYXQiOjE3NTU3OTk1ODQsImp0aSI6IjhlNTdlY2QxZGQxMDQwNzk4MjYyMzYxYTQ1MmQ2OTBlIiwidXNlcl9pZCI6IjIifQ.BHDH3yH2Ljf-U349XSPJlmkf6wg0TlylZnqpYqd6pbU
+
+{
+    "product_id": 1
+}
