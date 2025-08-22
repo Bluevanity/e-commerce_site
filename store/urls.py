@@ -24,7 +24,8 @@ from shop.views import (
     CartDetailView,
     CartItemCreateView,
     CartDetailView,
-    OrderListCreateView,
+    OrderItemCreateView,
+    OrderListView,
     OrderDetailView,
 )
 from rest_framework_simplejwt.views import (
@@ -43,7 +44,8 @@ urlpatterns = [
     path('api/cart/',  CartDetailView.as_view(), name='cart_detail'),
     path('api/cart/add',  CartItemCreateView.as_view(), name='add_item'),
     path('api/cart/update/<pk>/', CartDetailView.as_view(), name='update_item'),
-    path('api/orders/', OrderListCreateView.as_view(), name='order'),
+    path('api/order/', OrderItemCreateView.as_view(), name='make_order'),
+    path('api/orders/', OrderListView.as_view(), name="orders"),
     path('api/orders/<pk>/', OrderDetailView.as_view(), name='order_detail'),
 
 ]

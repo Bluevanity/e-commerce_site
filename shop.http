@@ -46,11 +46,19 @@ Content-Type: application/json
 
 ###
 
-POST http://127.0.0.1:8000/api/orders/ HTTP/1,1
+POST http://127.0.0.1:8000/api/order/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODk1Mjg3LCJpYXQiOjE3NTU4OTQ5ODcsImp0aSI6Ijk0NzhiOTU1MTY0YjRkODViZDg4MWYwYTdkNjZmZDVmIiwidXNlcl9pZCI6IjIifQ.OyEdtveXvUtNZ5b_Us4T9uSpXyg8qOCQ0apVSt2ZxjM
 
+{
+    "product_id": 1
+}
 ###
 
+GET http://127.0.0.1:8000/api/orders/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1OTAxNzE3LCJpYXQiOjE3NTU5MDE0MTcsImp0aSI6ImJhMTY2NjVkNzU2ZDQ5ZmViNTU5ZTcyY2RiYTZiZDg3IiwidXNlcl9pZCI6IjIifQ.cPVuXTpbhdJwmAscJwGibir9yiGwDDiqkA_BJGGONrU
+###
 GET http://127.0.0.1:8000/api/cart/ HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODIyNDE0LCJpYXQiOjE3NTU4MjIxMTQsImp0aSI6ImZkMDNkYjRjNDA5OTQ1OTdhMTI3ZDA2NWYwYzZhYWJiIiwidXNlcl9pZCI6IjIifQ.BPXRzgiwKx14debztc-siUDKPz7XudznwurZPJZnbcY

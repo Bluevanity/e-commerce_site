@@ -59,11 +59,11 @@ class CartItemCreateView(generics.CreateAPIView):
         except Product.DoesNotExist:
             return Response({"error": "No product with this id"})
         
-        cart_iteem, _ =CartItem.objects.get_or_create(cart=cart, product=product)
-        cart_iteem.quantity += int(request.data.get('quantity', 1))
-        cart_iteem.save()
+        cart_item, _ = CartItem.objects.get_or_create(cart=cart, product=product)
+        cart_item.quantity += int(request.data.get('quantity', 1))
+        cart_item.save()
         return Response(
-            CartItemSerializer(cart_iteem).data,
+            CartItemSerializer(cart_item).data,
             status=status.HTTP_201_CREATED
         )
 
@@ -75,14 +75,45 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return CartItem.objects.filter(cart_user=self.request.user)
 #----------------------------- ORDER ENDPOINTS-------------------------------------------
-class OrderListCreateView(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
+class OrderItemCreateView(generics.CreateAPIView):
+    serializer_class = OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def create(self, request):
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        order, _ = Order.objects.get_or_create(user=self.request.user)
+
+        try:
+            product = Product.objects.get(id=request.data.get('product_id'))
+        except Product.DoesNotExist:
+            return Response({"error": "No product with this id"})
+        
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        
+        print(created)
+        if created == True:
+            quantity = int(1)
+        else:
+            quantity = int(cart_item.quantity)
+        
+        price = float(product.price) * quantity
+        
+        order_item = OrderItem.objects.create(order=order, product=product, quantity=quantity, price=price)
+        order_item.save()
+        return Response(
+            OrderItemSerializer(order_item).data,
+            status=status.HTTP_201_CREATED
+        )
+    
+class OrderListView(generics.ListAPIView):
     serializer_class = OrderSerializer
-    permission_classes = [AllowAny]
-    lookup_field = User
+    permission_class = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
 
 class OrderDetailView(generics.RetrieveAPIView):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    parser_classes = [AllowAny]
-
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
