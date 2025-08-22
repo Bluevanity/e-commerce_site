@@ -34,7 +34,7 @@ Content-Type: application/json
 
 POST  http://127.0.0.1:8000/api/products/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1NzI5ODExLCJpYXQiOjE3NTU3Mjk1MTEsImp0aSI6IjdjNzIxYTI3MjgxNjRiMDJiODg3NTA3NjBlODNmMzExIiwidXNlcl9pZCI6IjEifQ.kcHUdwH6G0Yfi3_VEihcNGrp2UM0qZ9-BxOpl_Lj_x4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODIyNDE0LCJpYXQiOjE3NTU4MjIxMTQsImp0aSI6ImZkMDNkYjRjNDA5OTQ1OTdhMTI3ZDA2NWYwYzZhYWJiIiwidXNlcl9pZCI6IjIifQ.BPXRzgiwKx14debztc-siUDKPz7XudznwurZPJZnbcY
 ###
 
 GET http://127.0.0.1:8000/api/products/1 HTTP/1.1
@@ -53,14 +53,26 @@ Content-Type: application/json
 
 GET http://127.0.0.1:8000/api/cart/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Nzk3NDMxLCJpYXQiOjE3NTU3OTcxMzEsImp0aSI6ImQ4Yjk0NTJkODlkNjQxZTdiODI0NzQyZDRmZWQzZjIxIiwidXNlcl9pZCI6IjIifQ.jB_HgI3tun2uFhAvM5exSA4WIGuJPRHVkGLipuMB1Q0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODIyNDE0LCJpYXQiOjE3NTU4MjIxMTQsImp0aSI6ImZkMDNkYjRjNDA5OTQ1OTdhMTI3ZDA2NWYwYzZhYWJiIiwidXNlcl9pZCI6IjIifQ.BPXRzgiwKx14debztc-siUDKPz7XudznwurZPJZnbcY
 
 ###
 
-POST http://127.0.0.1:8000/api/cart/add HTTP/1.1
+POST http://127.0.0.1:8000/api/cart/update/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1Nzk5ODg0LCJpYXQiOjE3NTU3OTk1ODQsImp0aSI6IjhlNTdlY2QxZGQxMDQwNzk4MjYyMzYxYTQ1MmQ2OTBlIiwidXNlcl9pZCI6IjIifQ.BHDH3yH2Ljf-U349XSPJlmkf6wg0TlylZnqpYqd6pbU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODIyNDE0LCJpYXQiOjE3NTU4MjIxMTQsImp0aSI6ImZkMDNkYjRjNDA5OTQ1OTdhMTI3ZDA2NWYwYzZhYWJiIiwidXNlcl9pZCI6IjIifQ.BPXRzgiwKx14debztc-siUDKPz7XudznwurZPJZnbcY
 
 {
-    "product_id": 1
+    "product_id": 1,
+    "quantity": 4
+}
+
+###
+
+PATCH  http://127.0.0.1:8000/api/cart/update/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1ODI1NDE4LCJpYXQiOjE3NTU4MjUxMTgsImp0aSI6IjQ2NzgxYjRiMjI3ODRmYjc5N2M2YjM0YTlmM2VlNWM5IiwidXNlcl9pZCI6IjIifQ.VvTshy1koD3qP48pX56QEZ01fJq8hsGuNArRgFW7KEo
+
+{
+    "product_id": 1,
+    "quantity": 4
 }

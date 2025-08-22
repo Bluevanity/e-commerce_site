@@ -23,6 +23,7 @@ from shop.views import (
     ProductDetailView, 
     CartDetailView,
     CartItemCreateView,
+    CartDetailView,
     OrderListCreateView,
     OrderDetailView,
 )
@@ -40,7 +41,8 @@ urlpatterns = [
     path('api/products/', ProductListCreateView.as_view(), name='products'), #locked post endpoint
     path('api/products/<pk>/', ProductDetailView.as_view(), name='product_detail'), #locked put, patch, delelet endpoint
     path('api/cart/',  CartDetailView.as_view(), name='cart_detail'),
-    path('api/cart/add',  CartItemCreateView.as_view(), name='add_cartitem'),
+    path('api/cart/add',  CartItemCreateView.as_view(), name='add_item'),
+    path('api/cart/update/<pk>/', CartDetailView.as_view(), name='update_item'),
     path('api/orders/', OrderListCreateView.as_view(), name='order'),
     path('api/orders/<pk>/', OrderDetailView.as_view(), name='order_detail'),
 

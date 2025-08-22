@@ -1,7 +1,6 @@
-from rest_framework import generics
+from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
-from rest_framework import permissions
 from rest_framework.response import Response
 from .serializers import RegisterSerializer, ProductSerializer, OrderItemSerializer, OrderSerializer, CartItemSerializer, CartSerializer
 from .models import IsAdminUser, Product, OrderItem, Order, Cart, CartItem
@@ -54,13 +53,27 @@ class CartItemCreateView(generics.CreateAPIView):
 
     def create(self, request):
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
-        product_id = request.data.get('product_id')
-        quntity = request.data.get('quantity')
 
         try:
-            product = Product.objects.get(id=product_id)
+            product = Product.objects.get(id=request.data.get('product_id'))
         except Product.DoesNotExist:
             return Response({"error": "No product with this id"})
+        
+        cart_iteem, _ =CartItem.objects.get_or_create(cart=cart, product=product)
+        cart_iteem.quantity += int(request.data.get('quantity', 1))
+        cart_iteem.save()
+        return Response(
+            CartItemSerializer(cart_iteem).data,
+            status=status.HTTP_201_CREATED
+        )
+
+    
+class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CartItemSerializer
+    permission_class = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart_user=self.request.user)
 #----------------------------- ORDER ENDPOINTS-------------------------------------------
 class OrderListCreateView(generics.ListCreateAPIView):
     queryset = Order.objects.all()
