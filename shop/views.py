@@ -1,3 +1,6 @@
+import stripe
+from django.conf import settings
+from rest_framework.views import APIView
 from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
@@ -78,31 +81,46 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
 class OrderItemCreateView(generics.CreateAPIView):
     serializer_class = OrderItemSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
-    def create(self, request):
-        cart, _ = Cart.objects.get_or_create(user=self.request.user)
-        order, _ = Order.objects.get_or_create(user=self.request.user)
 
+    def create(self, request, *args, **kwargs):
+        user = self.request.user
+
+        # Get or create cart for user
+        cart, _ = Cart.objects.get_or_create(user=user)
+
+        # Always tie new items to a "Pending" order
+        order, created_now = Order.objects.get_or_create(user=user, status="Pending")
+
+        # Check product exists
         try:
-            product = Product.objects.get(id=request.data.get('product_id'))
+            product = Product.objects.get(id=request.data.get("product_id"))
         except Product.DoesNotExist:
-            return Response({"error": "No product with this id"})
-        
+            return Response({"error": "No product with this id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Add or update cart item
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        
-        print(created)
-        if created == True:
-            quantity = int(1)
+        if created:
+            cart_item.quantity = 1
         else:
-            quantity = int(cart_item.quantity)
-        
-        price = float(product.price) * quantity
-        
-        order_item = OrderItem.objects.create(order=order, product=product, quantity=quantity, price=price)
+            cart_item.quantity += 1
+        cart_item.save()
+
+        # Calculate price for this order item
+        price = product.price * cart_item.quantity
+
+        # If order item already exists, update instead of creating duplicate
+        order_item, created_item = OrderItem.objects.get_or_create(order=order, product=product)
+        order_item.quantity = cart_item.quantity
+        order_item.price = price
         order_item.save()
+
+        # Update total amount
+        order.total_amount = sum(item.price for item in order.orderitem_set.all())
+        order.save()
+
         return Response(
             OrderItemSerializer(order_item).data,
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_201_CREATED,
         )
     
 class OrderListView(generics.ListAPIView):
@@ -117,3 +135,31 @@ class OrderDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
+
+#------------------------------------------------------------------------------------------
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+class CreateStripePaymentIntent(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        try:
+            # Example: total from request payload
+            amount = request.data.get("amount")  # in cents, e.g. 2000 = $20
+            if not amount:
+                return Response({"error": "Amount is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            intent = stripe.PaymentIntent.create(
+                amount=int(amount),
+                currency="usd",
+                automatic_payment_methods={"enabled": True},
+                metadata={"user_id": request.user.id}  # optional
+            )
+
+            return Response({
+                "clientSecret": intent["client_secret"]
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
