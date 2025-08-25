@@ -101,8 +101,6 @@ class OrderItemCreateView(generics.CreateAPIView):
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
         if created:
             cart_item.quantity = 1
-        else:
-            cart_item.quantity += 1
         cart_item.save()
 
         # Calculate price for this order item
@@ -110,6 +108,7 @@ class OrderItemCreateView(generics.CreateAPIView):
 
         # If order item already exists, update instead of creating duplicate
         order_item, created_item = OrderItem.objects.get_or_create(order=order, product=product)
+
         order_item.quantity = cart_item.quantity
         order_item.price = price
         order_item.save()
@@ -146,7 +145,8 @@ class CreateStripePaymentIntent(APIView):
     def post(self, request):
         try:
             # Example: total from request payload
-            amount = request.data.get("amount")  # in cents, e.g. 2000 = $20
+            #amount = request.data.get("amount")  # in cents, e.g. 2000 = $20
+            amount = request.user.order_set.filter(status="Pending").first().total_amount 
             if not amount:
                 return Response({"error": "Amount is required"}, status=status.HTTP_400_BAD_REQUEST)
 
