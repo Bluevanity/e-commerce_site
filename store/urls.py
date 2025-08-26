@@ -28,6 +28,7 @@ from shop.views import (
     OrderItemCreateView,
     OrderListView,
     OrderDetailView,
+    stripe_webhook,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -49,5 +50,6 @@ urlpatterns = [
     path('api/orders/', OrderListView.as_view(), name="orders"),
     path('api/orders/<pk>/', OrderDetailView.as_view(), name='order_detail'),
     path("api/make-payment/", CreateStripePaymentIntent.as_view(), name="create-payment-intent"),
+    path('stripe/webhook/', stripe_webhook, name='stripe-webhook')
 ]
 

@@ -1,5 +1,8 @@
 import stripe
+import os
 from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny
@@ -9,7 +12,53 @@ from .serializers import RegisterSerializer, ProductSerializer, OrderItemSeriali
 from .models import IsAdminUser, Product, OrderItem, Order, Cart, CartItem
 
 User = get_user_model()
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET")  # from Stripe dashboard
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+
+    try:
+        # Verify webhook signature
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError:
+        return HttpResponse(status=400)  
+    except stripe.error.SignatureVerificationError:
+        return HttpResponse(status=400)  # Invalid signature
+
+    if event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']
+        order_id = payment_intent['metadata'].get('order_id')  # we’ll pass this when creating intent
+        if order_id:
+            try:
+                order = Order.objects.get(id=order_id)
+                order.status = "Successful"
+                order.save()
+                print(f"Order {order.id} marked as Successful")
+            except Order.DoesNotExist:
+                print(" Order not found")
+
+    elif event['type'] == 'payment_intent.payment_failed':
+        payment_intent = event['data']['object']
+        order_id = payment_intent['metadata'].get('order_id')
+        if order_id:
+            try:
+                order = Order.objects.get(id=order_id)
+                order.status = "Failed"
+                order.save()
+                print(f"Order {order.id} marked as Failed")
+            except Order.DoesNotExist:
+                print("Order not found")
+
+    return HttpResponse(status=200)
+
+#-------------------------------------------------------------------------------------------
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
