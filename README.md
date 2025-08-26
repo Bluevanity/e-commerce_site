@@ -112,6 +112,7 @@ stripe listen --forward-to localhost:8000/stripe/webhook/
 stripe trigger payment_intent.succeeded
 
 ## Project Structure
+```plaintext
 e-com/
 │── shop/           # App: products, cart, orders, authentication
 │── store/               # Django project folder 
@@ -119,7 +120,7 @@ e-com/
 │── README.md
 │── requirements.txt
 │── shop.http         # make requests to the server using Visual studio's REST client extension
-
+````
 ## Authentication
 
 Endpoints use DRF Authentication / JWT.
