@@ -40,7 +40,7 @@ It allows users to browse products, manage a shopping cart, place orders, and co
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/your-username/ecommerce-backend.git
-cd ecommerce-backend
+cd ecommerce-backend```
 
 ### 2. Create and acticate virtual Environment
 python -m venv .env
