@@ -72,11 +72,11 @@ python manage.py runserver
 
 When an order is placed, the backend generates a Stripe PaymentIntent:
 
-`intent = stripe.PaymentIntent.create(`
-`    amount=order.total_amount * 100,  # in cents`
-`    currency="usd",`
-`    metadata={"order_id": order.id},`
-`)`
+```intent = stripe.PaymentIntent.create(
+    amount=order.total_amount * 100,  # in cents
+    currency="usd",
+    metadata={"order_id": order.id},
+)```
 
 
 The client_secret is sent to the frontend for the user to complete the payment.
