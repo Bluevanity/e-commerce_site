@@ -72,11 +72,12 @@ python manage.py runserver
 
 When an order is placed, the backend generates a Stripe PaymentIntent:
 
-intent = stripe.PaymentIntent.create(
+```bash intent = stripe.PaymentIntent.create(
     amount=order.total_amount * 100,  # in cents
     currency="usd",
     metadata={"order_id": order.id},
 )
+```
 
 
 
