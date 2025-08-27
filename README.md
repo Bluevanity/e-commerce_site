@@ -69,7 +69,7 @@ STRIPE_ENDPOINT_SECRET=whsec_1234567890
 ### 5. Run migrations
 ```bash
 python manage.py migrate
-
+```
 ### 6. Start development server:
 ```bash
 python manage.py runserver
