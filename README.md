@@ -5,7 +5,7 @@ It allows users to browse products, manage a shopping cart, place orders, and co
 
 ---
 
-## 📌 Features
+##  Features
 
 - **User Authentication**
   - Register, Login, Logout (JWT or Token-based)
@@ -25,7 +25,7 @@ It allows users to browse products, manage a shopping cart, place orders, and co
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Backend:** Django, Django REST Framework
 - **Payments:** Stripe API
@@ -35,36 +35,45 @@ It allows users to browse products, manage a shopping cart, place orders, and co
 
 ---
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### 1. Clone the repository
-
+```bash
 git clone https://github.com/your-username/ecommerce-backend.git
 cd e-com
+```
 
 ### 2. Create and acticate virtual Environment
+```bash
 python -m venv .env
 source .env/bin/activate   # Linux/Mac
 .env\Scripts\activate      # Windows
+```
 
 ### 3. Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
 ### 4. Configure environment variables
 Create a file named .env in the project root:
+```bash
 SECRET_KEY=your_django_secret_key
 DEBUG=True
 
 STRIPE_SECRET_KEY=sk_test_1234567890
 STRIPE_PUBLIC_KEY=pk_test_1234567890
 STRIPE_ENDPOINT_SECRET=whsec_1234567890
+```
 
 ### 5. Run migrations
+```bash
 python manage.py migrate
 
-### 6. Start development server
+### 6. Start development server:
+```bash
 python manage.py runserver
-
+```
 
 ## Stripe Integration
 
@@ -98,18 +107,19 @@ payment_intent.payment_failed → mark order as Failed
 Install Stripe CLI -> https://stripe.com/docs/stripe-cli
 
 ### Login:
-
+```bash
 stripe login
-
+```
 
 ### Forward webhooks to your local server:
-
+```bash
 stripe listen --forward-to localhost:8000/stripe/webhook/
-
+```
 
 ### Trigger a test payment event:
-
+```bash
 stripe trigger payment_intent.succeeded
+```
 
 ## Project Structure
 ```plaintext
